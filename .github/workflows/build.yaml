@@ -42,6 +42,7 @@ jobs:
 
     steps:
 
+
       - name: Windows Machine Stats systeminfo
         if: ${{ matrix.os == 'windows-2025' }}
         shell: cmd
@@ -160,14 +161,16 @@ jobs:
       - name: Install MSYS2 on ${{ matrix.compilerEnv }}
         if: ${{ env.compilerClass == 'MSYS2' }}
         uses: msys2/setup-msys2@v2
-        env:
-          MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
         with:
           update: true
           path-type: strict
           msystem: ${{ env.compilerEnv }}
           install: >-
             ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
+
+      # for MSYS
+      - env:
+          MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
 
       - name: Install MSYS2 Packages on ${{ matrix.compilerEnv }}
         if: ${{ env.compilerClass == 'MSYS2' }}
@@ -225,7 +228,6 @@ jobs:
           echo "bash: $(which bash)"
           echo "Present Working Directory: $(pwd)"
           #
-          if [ "${OperatingSystem}" == "Msys" ]; then echo "msystem: ${msystem}" ; fi
           if [ "${OperatingSystem}" == "Msys" ]; then echo "env.msystem: ${{ env.msystem }}" ; fi
           if [ "${OperatingSystem}" == "Msys" ]; then echo "MSYS2_LOCATION: ${MSYS2_LOCATION}" ; fi
           if [ "${OperatingSystem}" == "Msys" ]; then echo "env.MSYS2_LOCATION: ${{ env.MSYS2_LOCATION }}" ; fi
