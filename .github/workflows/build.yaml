@@ -51,9 +51,16 @@ jobs:
         run: |
           echo "I am Cmd."
 
-      - name: Set Variables on ${{ matrix.compilerEnv }}
+      - name: Install Windows mingw Software on ${{ matrix.compilerEnv }}
         if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
         uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          path-type: strict
+          msystem: ${{ matrix.compilerEnv }}
+
+      - name: Set Variables on ${{ matrix.compilerEnv }}
+        if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
         env:
           # Msys OS variable
           msystem: ${{ matrix.compilerEnv }}
@@ -64,16 +71,7 @@ jobs:
           echo "MINGW_PACKAGE_PREFIX=${MINGW_PACKAGE_PREFIX}" >> ${GITHUB_ENV}
           echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
 
-      - name: Install Windows mingw Software on ${{ matrix.compilerEnv }}
-        if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
-        uses: msys2/setup-msys2@v2
-        with:
-          update: true
-          path-type: strict
-          msystem: ${{ matrix.compilerEnv }}
-          #
-          install: >-
-            ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
+
 
   
 
