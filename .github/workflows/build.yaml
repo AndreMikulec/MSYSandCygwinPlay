@@ -43,203 +43,203 @@ jobs:
     steps:
 
 
-      - name: Windows Machine Stats systeminfo
-        if: ${{ matrix.os == 'windows-2025' }}
-        shell: cmd
-        run: |
-          systeminfo
+    - name: Windows Machine Stats systeminfo
+      if: ${{ matrix.os == 'windows-2025' }}
+      shell: cmd
+      run: |
+        systeminfo
 
-      - name: Matrix Variables
-        if: matrix.os == 'windows-2025'
-        shell: bash                     # redundant, because it is my defined matrix default
-        run: |
-          echo "Hello from Windows and Bash.  I do exist!"
+    - name: Matrix Variables
+      if: matrix.os == 'windows-2025'
+      shell: bash                     # redundant, because it is my defined matrix default
+      run: |
+        echo "Hello from Windows and Bash.  I do exist!"
 
-          export TODAYSDATE=$(date +%Y-%m-%d)
-          echo  "TODAYSDATE=${TODAYSDATE}" >> ${GITHUB_ENV}
-          echo  "TODAYSDATE: ${TODAYSDATE}"
-          export  HEAD7_GITHUB_SHA="${GITHUB_SHA:0:7}"
-          echo   "HEAD7_GITHUB_SHA=${HEAD7_GITHUB_SHA}" >> ${GITHUB_ENV}
-          echo   "HEAD7_GITHUB_SHA: ${HEAD7_GITHUB_SHA}"
+        export TODAYSDATE=$(date +%Y-%m-%d)
+        echo  "TODAYSDATE=${TODAYSDATE}" >> ${GITHUB_ENV}
+        echo  "TODAYSDATE: ${TODAYSDATE}"
+        export  HEAD7_GITHUB_SHA="${GITHUB_SHA:0:7}"
+        echo   "HEAD7_GITHUB_SHA=${HEAD7_GITHUB_SHA}" >> ${GITHUB_ENV}
+        echo   "HEAD7_GITHUB_SHA: ${HEAD7_GITHUB_SHA}"
 
-        # OUT OF TIME RIGHT NOW.  IN THE FUTURE, CONVERT EVERYTHING "BELOW" "TO" BASH
-      - name: Matrix Variables
-        if: matrix.os == 'windows-2025'
-        shell: powershell
-        run: |
-          # systeminfo
-          echo "${{ matrix.compilerEnv }} on ${{ matrix.os }}"
-  
-          function Set-EnvVar {param($X)     Add-Content -Path ${env:GITHUB_ENV} -Value "$X"}
-          #
+      # OUT OF TIME RIGHT NOW.  IN THE FUTURE, CONVERT EVERYTHING "BELOW" "TO" BASH
+    - name: Matrix Variables
+      if: matrix.os == 'windows-2025'
+      shell: powershell
+      run: |
+        # systeminfo
+        echo "${{ matrix.compilerEnv }} on ${{ matrix.os }}"
 
-          # ${env:HEAD7_GITHUB_SHA} = "${env:GITHUB_SHA}".SubString(0,7)
-          # Set-EnvVar "HEAD7_GITHUB_SHA=${env:HEAD7_GITHUB_SHA}"
+        function Set-EnvVar {param($X)     Add-Content -Path ${env:GITHUB_ENV} -Value "$X"}
+        #
 
-          # echo "HEAD7_GITHUB_SHA: ${env:HEAD7_GITHUB_SHA}"
+        # ${env:HEAD7_GITHUB_SHA} = "${env:GITHUB_SHA}".SubString(0,7)
+        # Set-EnvVar "HEAD7_GITHUB_SHA=${env:HEAD7_GITHUB_SHA}"
 
-          ${env:shell} = "${{ matrix.shell }}"
-          if("${env:shell}" -eq ""){${env:shell} = "notset"}
-          Set-EnvVar "shell=${env:shell}"
+        # echo "HEAD7_GITHUB_SHA: ${env:HEAD7_GITHUB_SHA}"
 
-          echo "shell: ${env:shell}"
+        ${env:shell} = "${{ matrix.shell }}"
+        if("${env:shell}" -eq ""){${env:shell} = "notset"}
+        Set-EnvVar "shell=${env:shell}"
 
-          ${env:shellEnv} = "${{ matrix.shellEnv }}"
-          if("${env:shellEnv}" -eq ""){${env:shellEnv} = "notset"}
-          Set-EnvVar "shellEnv=${env:shellEnv}"
+        echo "shell: ${env:shell}"
 
-          echo "shellEnv: ${env:shellEnv}"
+        ${env:shellEnv} = "${{ matrix.shellEnv }}"
+        if("${env:shellEnv}" -eq ""){${env:shellEnv} = "notset"}
+        Set-EnvVar "shellEnv=${env:shellEnv}"
 
-          # x64 or x86
-          ${env:Architecture} = "${{ matrix.Architecture }}"
-          if("${env:Architecture}" -eq ""){${env:Architecture} = "notset"}
-          Set-EnvVar "Architecture=${env:Architecture}"
+        echo "shellEnv: ${env:shellEnv}"
 
-          echo "Architecture: ${env:Architecture}"
+        # x64 or x86
+        ${env:Architecture} = "${{ matrix.Architecture }}"
+        if("${env:Architecture}" -eq ""){${env:Architecture} = "notset"}
+        Set-EnvVar "Architecture=${env:Architecture}"
 
-          ${env:os} = "${{ matrix.os }}"
-          if("${env:os}" -eq ""){${env:os} = "notset"}
-          Set-EnvVar "os=${env:os}"
+        echo "Architecture: ${env:Architecture}"
 
-          echo "os: ${env:os}"
+        ${env:os} = "${{ matrix.os }}"
+        if("${env:os}" -eq ""){${env:os} = "notset"}
+        Set-EnvVar "os=${env:os}"
 
-          ${env:compilerEnv} = "${{ matrix.compilerEnv }}"
-          if("${env:compilerEnv}" -eq ""){${env:compilerEnv} = "notset"}
-          Set-EnvVar "compilerEnv=${env:compilerEnv}"
+        echo "os: ${env:os}"
 
-          echo "compilerEnv: ${env:compilerEnv}"
+        ${env:compilerEnv} = "${{ matrix.compilerEnv }}"
+        if("${env:compilerEnv}" -eq ""){${env:compilerEnv} = "notset"}
+        Set-EnvVar "compilerEnv=${env:compilerEnv}"
 
-          ${env:compilerClass} = "notset"
-          # "CLANG32" - not supported by Github Action msys2/setup-msys2@v2"
-          if("${env:compilerEnv}" -in "MING64", "MINGW32", "UCRT64", "CLANG64", "CLANGARM64") {
-            ${env:compilerClass} = "MSYS2"
-          }
-          if("${env:compilerEnv}" -eq "cygwin") {
-            ${env:compilerClass} = "cygwin"
-          }
-          Set-EnvVar "compilerClass=${env:compilerClass}"
+        echo "compilerEnv: ${env:compilerEnv}"
 
-          echo "compilerClass: ${env:compilerClass}"
+        ${env:compilerClass} = "notset"
+        # "CLANG32" - not supported by Github Action msys2/setup-msys2@v2"
+        if("${env:compilerEnv}" -in "MING64", "MINGW32", "UCRT64", "CLANG64", "CLANGARM64") {
+          ${env:compilerClass} = "MSYS2"
+        }
+        if("${env:compilerEnv}" -eq "cygwin") {
+          ${env:compilerClass} = "cygwin"
+        }
+        Set-EnvVar "compilerClass=${env:compilerClass}"
 
-          ${env:compilerExe} = "notset"
-          if ( "${{ matrix.compilerEnv }}" -eq "MINGW64"    ) { ${env:compilerExe} = "gcc" }
-          if ( "${{ matrix.compilerEnv }}" -eq "MINGW32"    ) { ${env:compilerExe} = "gcc" }
-          if ( "${{ matrix.compilerEnv }}" -eq "UCRT64"     ) { ${env:compilerExe} = "gcc" }
-          # if ( "${{ matrix.compilerEnv }}" -eq "CLANG32"    ) { ${env:compilerExe} = "clang" }
-          if ( "${{ matrix.compilerEnv }}" -eq "CLANG64"    ) { ${env:compilerExe} = "clang" }
-          if ( "${{ matrix.compilerEnv }}" -eq "CLANGARM64" ) { ${env:compilerExe} = "clang" }
-          if("${env:compilerExe}" -eq ""){${env:compilerExe} = "notset"}
-          Set-EnvVar "compilerExe=${env:compilerExe}"
+        echo "compilerClass: ${env:compilerClass}"
 
-          echo "compilerExe: ${env:compilerExe}"
+        ${env:compilerExe} = "notset"
+        if ( "${{ matrix.compilerEnv }}" -eq "MINGW64"    ) { ${env:compilerExe} = "gcc" }
+        if ( "${{ matrix.compilerEnv }}" -eq "MINGW32"    ) { ${env:compilerExe} = "gcc" }
+        if ( "${{ matrix.compilerEnv }}" -eq "UCRT64"     ) { ${env:compilerExe} = "gcc" }
+        # if ( "${{ matrix.compilerEnv }}" -eq "CLANG32"    ) { ${env:compilerExe} = "clang" }
+        if ( "${{ matrix.compilerEnv }}" -eq "CLANG64"    ) { ${env:compilerExe} = "clang" }
+        if ( "${{ matrix.compilerEnv }}" -eq "CLANGARM64" ) { ${env:compilerExe} = "clang" }
+        if("${env:compilerExe}" -eq ""){${env:compilerExe} = "notset"}
+        Set-EnvVar "compilerExe=${env:compilerExe}"
 
-          ${env:mingw_env} = "notset"
-          if ( "${{ matrix.compilerEnv }}" -eq "MINGW64"    ) { ${env:mingw_env} = "x86_64" }
-          if ( "${{ matrix.compilerEnv }}" -eq "MINGW32"    ) { ${env:mingw_env} = "i686" }
-          if ( "${{ matrix.compilerEnv }}" -eq "UCRT64"     ) { ${env:mingw_env} = "ucrt-x86_64" }
-          # if ( "${{ matrix.compilerEnv }}" -eq "CLANG32"    ) { ${env:mingw_env} = "clang-i686" }
-          if ( "${{ matrix.compilerEnv }}" -eq "CLANG64"    ) { ${env:mingw_env} = "clang-x86_64" }
-          if ( "${{ matrix.compilerEnv }}" -eq "CLANGARM64" ) { ${env:mingw_env} = "clang-aarch64" }
-          if ( "${{ matrix.compilerEnv }}" -eq "notset"     ) { ${env:mingw_env} = "notset" }
-          Set-EnvVar "mingw_env=${env:mingw_env}"
+        echo "compilerExe: ${env:compilerExe}"
 
-          echo "mingw_env: ${env:mingw_env}"
+        ${env:mingw_env} = "notset"
+        if ( "${{ matrix.compilerEnv }}" -eq "MINGW64"    ) { ${env:mingw_env} = "x86_64" }
+        if ( "${{ matrix.compilerEnv }}" -eq "MINGW32"    ) { ${env:mingw_env} = "i686" }
+        if ( "${{ matrix.compilerEnv }}" -eq "UCRT64"     ) { ${env:mingw_env} = "ucrt-x86_64" }
+        # if ( "${{ matrix.compilerEnv }}" -eq "CLANG32"    ) { ${env:mingw_env} = "clang-i686" }
+        if ( "${{ matrix.compilerEnv }}" -eq "CLANG64"    ) { ${env:mingw_env} = "clang-x86_64" }
+        if ( "${{ matrix.compilerEnv }}" -eq "CLANGARM64" ) { ${env:mingw_env} = "clang-aarch64" }
+        if ( "${{ matrix.compilerEnv }}" -eq "notset"     ) { ${env:mingw_env} = "notset" }
+        Set-EnvVar "mingw_env=${env:mingw_env}"
 
-          ${env:MINGW_PACKAGE_PREFIX} = "notset"
-          if ("${{ env.mingw_env }}" -ne "notset") { ${env:MINGW_PACKAGE_PREFIX} = "mingw-w64-${env:mingw_env}" }
-          if ("${{ env.mingw_env }}" -eq "notset") { ${env:MINGW_PACKAGE_PREFIX} = "notset" }
-          Set-EnvVar "MINGW_PACKAGE_PREFIX=${env:MINGW_PACKAGE_PREFIX}"
+        echo "mingw_env: ${env:mingw_env}"
 
-          echo "MINGW_PACKAGE_PREFIX: ${env:MINGW_PACKAGE_PREFIX}"
+        ${env:MINGW_PACKAGE_PREFIX} = "notset"
+        if ("${{ env.mingw_env }}" -ne "notset") { ${env:MINGW_PACKAGE_PREFIX} = "mingw-w64-${env:mingw_env}" }
+        if ("${{ env.mingw_env }}" -eq "notset") { ${env:MINGW_PACKAGE_PREFIX} = "notset" }
+        Set-EnvVar "MINGW_PACKAGE_PREFIX=${env:MINGW_PACKAGE_PREFIX}"
 
-      # BEST DESIGN
-      # If available, use the shell variable ${MYVAR}
-      # If the shell variable is not avalable then, use the Github environment variable ${[ env.MYVAR }}
-      # If the Github environmental variable is not avalable then use the Github matrix variable ${[ matrix.MYVAR }}
+        echo "MINGW_PACKAGE_PREFIX: ${env:MINGW_PACKAGE_PREFIX}"
 
-      # Note, MSYS2 is Windows only.  But, the Arch package management system is Linux (and Windows through MSYS2) 
-      - name: Install MSYS2 on ${{ matrix.compilerEnv }}
-        id: msys2_install
-        if: ${{ env.compilerClass == 'MSYS2' }}
-        uses: msys2/setup-msys2@v2
-        with:
-          update: true
-          path-type: strict
-          msystem: ${{ env.compilerEnv }}
-          install: >-
-            ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
+    # BEST DESIGN
+    # If available, use the shell variable ${MYVAR}
+    # If the shell variable is not avalable then, use the Github environment variable ${[ env.MYVAR }}
+    # If the Github environmental variable is not avalable then use the Github matrix variable ${[ matrix.MYVAR }}
 
-      # for MSYS
-      # - env:
-      #    MSYS2_LOCATION: ${{ steps.msys2_install.outputs.msys2-location }}
-      #  run: echo "$env:MSYS2_LOCATION"
+    # Note, MSYS2 is Windows only.  But, the Arch package management system is Linux (and Windows through MSYS2) 
+    - name: Install MSYS2 on ${{ matrix.compilerEnv }}
+      id: msys2_install
+      if: ${{ env.compilerClass == 'MSYS2' }}
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        path-type: strict
+        msystem: ${{ env.compilerEnv }}
+        install: >-
+          ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
 
-      - name: Install MSYS2 Packages on ${{ matrix.compilerEnv }}
-        if: ${{ env.compilerClass == 'MSYS2' }}
-        env:
-          # Msys OS variable
-          msystem: ${{ env.compilerEnv }}
-        run: |
-          set -x -v -e
-          echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
-          pacman --noconfirm -S --needed  ${MINGW_PACKAGE_PREFIX}-7zip
+    # for MSYS
+    # - env:
+    #    MSYS2_LOCATION: ${{ steps.msys2_install.outputs.msys2-location }}
+    #  run: echo "$env:MSYS2_LOCATION"
 
-      - name: Set up cygwin
-        if: ${{ env.compilerClass == 'cygwin' }}
-        uses: cygwin/cygwin-install-action@v6
-        with:
-          # x86 or x86_64
-          #         GitHub offers ternary operator like behaviour that you can use in expressions
-          platform: ${{ env.Architecture == 'x64' && 'x86_64' || 'x86' }}
-          install-dir: 'C:\cygwin'
-          # REQUIRED default true - otherwise the default install MING64 "bash" will be found
-          # add-to-path: true
-          work-vol: 'C:'
-          packages: >-
-             p7zip
+    - name: Install MSYS2 Packages on ${{ matrix.compilerEnv }}
+      if: ${{ env.compilerClass == 'MSYS2' }}
+      env:
+        # Msys OS variable
+        msystem: ${{ env.compilerEnv }}
+      run: |
+        set -x -v -e
+        echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
+        pacman --noconfirm -S --needed  ${MINGW_PACKAGE_PREFIX}-7zip
 
-      - name: View cygwin p7zip Version
-        if: ${{ env.compilerClass == 'cygwin' }}
-        env:
-          # Msys OS variable
-          msystem: ${{ env.compilerEnv }}
-        run: |
-          echo "View cygwin p7zip Version"
-          # cygwin query R package version
-          cygcheck -c p7zip
+    - name: Set up cygwin
+      if: ${{ env.compilerClass == 'cygwin' }}
+      uses: cygwin/cygwin-install-action@v6
+      with:
+        # x86 or x86_64
+        #         GitHub offers ternary operator like behaviour that you can use in expressions
+        platform: ${{ env.Architecture == 'x64' && 'x86_64' || 'x86' }}
+        install-dir: 'C:\cygwin'
+        # REQUIRED default true - otherwise the default install MING64 "bash" will be found
+        # add-to-path: true
+        work-vol: 'C:'
+        packages: >-
+           p7zip
 
-      - name: Set Variables in ${{ matrix.compilerEnv }} in ${{ matrix.shellEnv }} in in ${{ matrix.shell }}
-        env:
-          # cygwin OS variables
-          SHELLOPTS: igncr
-          CHERE_INVOKING: 1
-          # Msys OS variable
-          msystem: ${{ env.compilerEnv }}
-          MSYS2_LOCATION: ${{ steps.msys2_install.outputs.msys2-location }}
-        run: |
-          echo "Welcome to Set Variables in ${compilerEnv} in ${shellEnv} in ${shell}"
-          set -x -v -e
-          if [ "${OperatingSystem}" == "" ]; then export OperatingSystem=$(uname -o); fi
-          echo "OperatingSystem: ${OperatingSystem}"
-          if [ "${OperatingSystem}" == "Cygwin" ]
-          then
-            # because I set CHERE_INVOKING to be 1
-            export PATH=/usr/local/bin:/usr/bin:/usr/lib/lapack:/bin:/usr/sbin:/sbin
-          fi
-          uname -a
-          echo "compilerEnv: ${{ env.compilerEnv }}"
-          echo "bash: $(which bash)"
-          echo "Present Working Directory: $(pwd)"
-          #
-          if [ "${OperatingSystem}" == "Msys" ]; then echo "env.msystem: ${{ env.msystem }}" ; fi
-          if [ "${OperatingSystem}" == "Msys" ]; then echo "MSYS2_LOCATION: ${MSYS2_LOCATION}" ; fi
-          if [ "${OperatingSystem}" == "Msys" ]; then echo "env.MSYS2_LOCATION: ${{ env.MSYS2_LOCATION }}" ; fi
-          if [ "${OperatingSystem}" == "Msys" ]; then export | grep MINGW ; fi
-          if [ "${OperatingSystem}" == "Msys" ]; then export | grep MSYSTEM ; fi
+    - name: View cygwin p7zip Version
+      if: ${{ env.compilerClass == 'cygwin' }}
+      env:
+        # Msys OS variable
+        msystem: ${{ env.compilerEnv }}
+      run: |
+        echo "View cygwin p7zip Version"
+        # cygwin query R package version
+        cygcheck -c p7zip
 
-          export VAR="notset"
-          if [ "true" == "true" ]; then export VAR="value" ; fi 
-          echo "VAR=${VAR}" >> ${GITHUB_ENV}
-          echo "VAR: ${VAR}"
+    - name: Set Variables in ${{ matrix.compilerEnv }} in ${{ matrix.shellEnv }} in in ${{ matrix.shell }}
+      env:
+        # cygwin OS variables
+        SHELLOPTS: igncr
+        CHERE_INVOKING: 1
+        # Msys OS variable
+        msystem: ${{ env.compilerEnv }}
+        MSYS2_LOCATION: ${{ steps.msys2_install.outputs.msys2-location }}
+      run: |
+        echo "Welcome to Set Variables in ${compilerEnv} in ${shellEnv} in ${shell}"
+        set -x -v -e
+        if [ "${OperatingSystem}" == "" ]; then export OperatingSystem=$(uname -o); fi
+        echo "OperatingSystem: ${OperatingSystem}"
+        if [ "${OperatingSystem}" == "Cygwin" ]
+        then
+          # because I set CHERE_INVOKING to be 1
+          export PATH=/usr/local/bin:/usr/bin:/usr/lib/lapack:/bin:/usr/sbin:/sbin
+        fi
+        uname -a
+        echo "compilerEnv: ${{ env.compilerEnv }}"
+        echo "bash: $(which bash)"
+        echo "Present Working Directory: $(pwd)"
+        #
+        if [ "${OperatingSystem}" == "Msys" ]; then echo "env.msystem: ${{ env.msystem }}" ; fi
+        if [ "${OperatingSystem}" == "Msys" ]; then echo "MSYS2_LOCATION: ${MSYS2_LOCATION}" ; fi
+        if [ "${OperatingSystem}" == "Msys" ]; then echo "env.MSYS2_LOCATION: ${{ env.MSYS2_LOCATION }}" ; fi
+        if [ "${OperatingSystem}" == "Msys" ]; then export | grep MINGW ; fi
+        if [ "${OperatingSystem}" == "Msys" ]; then export | grep MSYSTEM ; fi
+
+        export VAR="notset"
+        if [ "true" == "true" ]; then export VAR="value" ; fi 
+        echo "VAR=${VAR}" >> ${GITHUB_ENV}
+        echo "VAR: ${VAR}"
 
 
