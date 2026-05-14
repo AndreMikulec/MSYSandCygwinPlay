@@ -47,6 +47,12 @@ jobs:
 
       - name: Matrix Variables
         if: matrix.os == 'windows-2025'
+        shell: bash
+        run: |
+          echo "Hello from Windows and bash"
+
+      - name: Matrix Variables
+        if: matrix.os == 'windows-2025'
         shell: powershell
         run: |
           # systeminfo
