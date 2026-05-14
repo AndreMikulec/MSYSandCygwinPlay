@@ -196,7 +196,7 @@ jobs:
         # add-to-path: true
         work-vol: 'C:'
         packages: >-
-           p7zip
+            p7zip
 
     - name: View cygwin p7zip Version
       if: ${{ env.compilerClass == 'cygwin' }}
