@@ -1,0 +1,67 @@
+name: Builds
+run-name: Build - ${{ github.event.head_commit.message }}
+
+on:
+   push:
+   pull_request:
+   workflow_dispatch:
+
+jobs:
+  build:
+    name: matid ${{ matrix.matid }} ${{ matrix.compilerEnv }} 
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.GithubActionsIgnoreFail }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+
+          - matid: 01
+            os: windows-2025
+            compilerEnv: cygwin
+            GithubActionsIgnoreFail: false
+
+          - matid: 02
+            os: windows-2025
+            compilerEnv: UCRT64
+            shellEnv: msys2 {0}
+
+          - matid: 03
+            os: windows-2025
+            GithubActionsIgnoreFail: true
+            compilerEnv: UCRT64
+            shellEnv: msys2 {0}
+
+          - matid: 03
+            os: windows-2025
+            GithubActionsIgnoreFail: true
+            compilerEnv: UCRT64
+            shellEnv: msys2 {0}
+
+    defaults:
+      run:
+        shell: ${{ matrix.shellEnv || 'bash' }}
+
+    steps:
+
+      - name: Matrix Variables
+        if: matrix.os == 'windows-2025'
+        shell: powershell
+        run: |
+          # systeminfo
+
+      - name: I am Powershell
+        if: ${{ env.os == 'windows-2025'}}
+        shell: powershell
+        run: |
+          echo "I am Powershell"
+
+      - name: I am Cmd
+        if: ${{ env.os == 'windows-2025' }}
+        shell: cmd
+        run: |
+          echo "I am Cmd."
+
+
+
+
