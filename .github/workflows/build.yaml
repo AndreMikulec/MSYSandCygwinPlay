@@ -51,6 +51,13 @@ jobs:
         run: |
           echo "Hello from Windows and Bash.  I do exist!"
 
+        export TODAYSDATE=$(date +%Y-%m-%d)
+        echo  "TODAYSDATE=${TODAYSDATE}" >> ${GITHUB_ENV}
+        echo  "TODAYSDATE: ${TODAYSDATE}"
+        export  HEAD7_GITHUB_SHA="${GITHUB_SHA:0:7}"
+        echo   "HEAD7_GITHUB_SHA=${HEAD7_GITHUB_SHA}" >> ${GITHUB_ENV}
+        echo   "HEAD7_GITHUB_SHA: ${HEAD7_GITHUB_SHA}"
+
         # OUT OF TIME RIGHT NOW.  IN THE FUTURE, CONVERT EVERYTHING "BELOW" "TO" BASH
       - name: Matrix Variables
         if: matrix.os == 'windows-2025'
@@ -61,10 +68,11 @@ jobs:
   
           function Set-EnvVar {param($X)     Add-Content -Path ${env:GITHUB_ENV} -Value "$X"}
           #
-          ${env:HEAD7_GITHUB_SHA} = "${env:GITHUB_SHA}".SubString(0,7)
-          Set-EnvVar "HEAD7_GITHUB_SHA=${env:HEAD7_GITHUB_SHA}"
 
-          echo "HEAD7_GITHUB_SHA: ${env:HEAD7_GITHUB_SHA}"
+          # ${env:HEAD7_GITHUB_SHA} = "${env:GITHUB_SHA}".SubString(0,7)
+          # Set-EnvVar "HEAD7_GITHUB_SHA=${env:HEAD7_GITHUB_SHA}"
+
+          # echo "HEAD7_GITHUB_SHA: ${env:HEAD7_GITHUB_SHA}"
 
           ${env:shell} = "${{ matrix.shell }}"
           if("${env:shell}" -eq ""){${env:shell} = "notset"}
@@ -201,19 +209,17 @@ jobs:
           then
             # because I set CHERE_INVOKING to be 1
             export PATH=/usr/local/bin:/usr/bin:/usr/lib/lapack:/bin:/usr/sbin:/sbin
-            echo "MSYS2_LOCATION: ${MSYS2_LOCATION}"
           fi
           uname -a
           echo "compilerEnv: ${{ env.compilerEnv }}"
           echo "bash: $(which bash)"
           echo "Present Working Directory: $(pwd)"
           #
-          if [ "${OperatingSystem}" == "Msys" ]
-          then
-            echo "msystem: ${msystem}"
-            export | grep MINGW
-            export | grep MSYSTEM
-          fi
+          if [ "${OperatingSystem}" == "Msys" ]; then echo "msystem: ${msystem}"
+          if [ "${OperatingSystem}" == "Msys" ]; then echo "MSYS2_LOCATION: ${MSYS2_LOCATION}" ; fi
+          if [ "${OperatingSystem}" == "Msys" ]; then export | grep MINGW ;
+          if [ "${OperatingSystem}" == "Msys" ]; then export | grep MSYSTEM ;
+
           export VAR="notset"
           if [ "true" == "true" ]; then export VAR="value" ; fi 
           echo "VAR=${VAR}" >> ${GITHUB_ENV}
