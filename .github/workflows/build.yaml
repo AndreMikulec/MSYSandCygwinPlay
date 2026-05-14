@@ -1,5 +1,5 @@
 name: Builds
-run-name: Build - ${{ github.event.head_commit.message }}
+run-name: Builds - ${{ github.event.head_commit.message }}
 
 on:
    push:
@@ -25,30 +25,25 @@ jobs:
             os: windows-2025
             compilerEnv: UCRT64
             shellEnv: msys2 {0}
+            GithubActionsIgnoreFail: true
 
           - matid: 03
             os: windows-2025
-            GithubActionsIgnoreFail: true
             compilerEnv: UCRT64
             shellEnv: msys2 {0}
+            GithubActionsIgnoreFail: true
 
           - matid: 03
             os: windows-2025
-            GithubActionsIgnoreFail: true
             compilerEnv: UCRT64
             shellEnv: msys2 {0}
+            GithubActionsIgnoreFail: true
 
     defaults:
       run:
         shell: ${{ matrix.shellEnv || 'bash' }}
 
     steps:
-
-      - name: Matrix Variables
-        if: matrix.os == 'windows-2025'
-        shell: powershell
-        run: |
-          # systeminfo
 
       - name: I am Powershell
         if: ${{ env.os == 'windows-2025'}}
