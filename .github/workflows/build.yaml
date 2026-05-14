@@ -47,10 +47,11 @@ jobs:
 
       - name: Matrix Variables
         if: matrix.os == 'windows-2025'
-        shell: bash
+        shell: bash                     # redundant, because it is my defined matrix default
         run: |
-          echo "Hello from Windows and bash"
+          echo "Hello from Windows and Bash.  I do exist!"
 
+        # OUT OF TIME RIGHT NOW.  IN THE FUTURE, CONVERT EVERYTHING "BELOW" "TO" BASH
       - name: Matrix Variables
         if: matrix.os == 'windows-2025'
         shell: powershell
@@ -78,7 +79,8 @@ jobs:
           echo "compilerEnv: ${env:compilerEnv}"
 
           ${env:compilerClass} = "notset"
-          if("${env:compilerEnv}" -in "MING64", "MINGW32", "UCRT64", "CLANG32", "CLANG64", "CLANGARM64") {
+          # "CLANG32" - not supported by Github Action msys2/setup-msys2@v2"
+          if("${env:compilerEnv}" -in "MING64", "MINGW32", "UCRT64", "CLANG64", "CLANGARM64") {
             ${env:compilerClass} = "MSYS2"
           }
           if("${env:compilerEnv}" -eq "cygwin") {
@@ -92,7 +94,7 @@ jobs:
           if ( "${{ matrix.compilerEnv }}" -eq "MINGW64"    ) { ${env:compilerExe} = "gcc" }
           if ( "${{ matrix.compilerEnv }}" -eq "MINGW32"    ) { ${env:compilerExe} = "gcc" }
           if ( "${{ matrix.compilerEnv }}" -eq "UCRT64"     ) { ${env:compilerExe} = "gcc" }
-          if ( "${{ matrix.compilerEnv }}" -eq "CLANG32"    ) { ${env:compilerExe} = "clang" }
+          # if ( "${{ matrix.compilerEnv }}" -eq "CLANG32"    ) { ${env:compilerExe} = "clang" }
           if ( "${{ matrix.compilerEnv }}" -eq "CLANG64"    ) { ${env:compilerExe} = "clang" }
           if ( "${{ matrix.compilerEnv }}" -eq "CLANGARM64" ) { ${env:compilerExe} = "clang" }
           if("${env:compilerExe}" -eq ""){${env:compilerExe} = "notset"}
@@ -104,7 +106,7 @@ jobs:
           if ( "${{ matrix.compilerEnv }}" -eq "MINGW64"    ) { ${env:mingw_env} = "x86_64" }
           if ( "${{ matrix.compilerEnv }}" -eq "MINGW32"    ) { ${env:mingw_env} = "i686" }
           if ( "${{ matrix.compilerEnv }}" -eq "UCRT64"     ) { ${env:mingw_env} = "ucrt-x86_64" }
-          if ( "${{ matrix.compilerEnv }}" -eq "CLANG32"    ) { ${env:mingw_env} = "clang-i686" }
+          # if ( "${{ matrix.compilerEnv }}" -eq "CLANG32"    ) { ${env:mingw_env} = "clang-i686" }
           if ( "${{ matrix.compilerEnv }}" -eq "CLANG64"    ) { ${env:mingw_env} = "clang-x86_64" }
           if ( "${{ matrix.compilerEnv }}" -eq "CLANGARM64" ) { ${env:mingw_env} = "clang-aarch64" }
           if ( "${{ matrix.compilerEnv }}" -eq "notset"     ) { ${env:mingw_env} = "notset" }
@@ -120,7 +122,7 @@ jobs:
           echo "MINGW_PACKAGE_PREFIX: ${env:MINGW_PACKAGE_PREFIX}"
 
       - name: Install Windows mingw Software on ${{ matrix.compilerEnv }}
-        if: ${{ env.os == 'windows-2025' && ( env.compilerEnv == 'UCRT64' || env.compilerEnv == 'MINGW32' ) }}
+        if: ${{ env.os == 'windows-2025' && env.compilerClass == 'MSYS2' }}
         uses: msys2/setup-msys2@v2
         with:
           update: true
@@ -130,7 +132,7 @@ jobs:
             ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
 
       - name: Set Variables on ${{ matrix.compilerEnv }}
-        if: ${{ env.os == 'windows-2025' && ( env.compilerEnv == 'UCRT64' || env.compilerEnv == 'MINGW32' ) }}
+        if: ${{ env.os == 'windows-2025' && env.compilerClass == 'MSYS2' }}
         env:
           # Msys OS variable
           msystem: ${{ env.compilerEnv }}
@@ -139,7 +141,7 @@ jobs:
           echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
 
       - name: Install Windows mingw Software Packages on ${{ matrix.compilerEnv }}
-        if: ${{ env.os == 'windows-2025' && ( env.compilerEnv == 'UCRT64' || env.compilerEnv == 'MINGW32' ) }}
+        if: ${{ env.os == 'windows-2025' && env.compilerClass == 'MSYS2' }}
         env:
           # Msys OS variable
           msystem: ${{ env.compilerEnv }}
