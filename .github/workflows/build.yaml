@@ -51,12 +51,12 @@ jobs:
         run: |
           echo "Hello from Windows and Bash.  I do exist!"
 
-        export TODAYSDATE=$(date +%Y-%m-%d)
-        echo  "TODAYSDATE=${TODAYSDATE}" >> ${GITHUB_ENV}
-        echo  "TODAYSDATE: ${TODAYSDATE}"
-        export  HEAD7_GITHUB_SHA="${GITHUB_SHA:0:7}"
-        echo   "HEAD7_GITHUB_SHA=${HEAD7_GITHUB_SHA}" >> ${GITHUB_ENV}
-        echo   "HEAD7_GITHUB_SHA: ${HEAD7_GITHUB_SHA}"
+          export TODAYSDATE=$(date +%Y-%m-%d)
+          echo  "TODAYSDATE=${TODAYSDATE}" >> ${GITHUB_ENV}
+          echo  "TODAYSDATE: ${TODAYSDATE}"
+          export  HEAD7_GITHUB_SHA="${GITHUB_SHA:0:7}"
+          echo   "HEAD7_GITHUB_SHA=${HEAD7_GITHUB_SHA}" >> ${GITHUB_ENV}
+          echo   "HEAD7_GITHUB_SHA: ${HEAD7_GITHUB_SHA}"
 
         # OUT OF TIME RIGHT NOW.  IN THE FUTURE, CONVERT EVERYTHING "BELOW" "TO" BASH
       - name: Matrix Variables
