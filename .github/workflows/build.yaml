@@ -17,17 +17,20 @@ jobs:
         include:
 
           - matid: 01
+            Architecture: x64
             os: windows-2025
             compilerEnv: cygwin
             GithubActionsIgnoreFail: false
 
           - matid: 02
+            Architecture: x64
             os: windows-2025
             compilerEnv: MINGW32
             shellEnv: msys2 {0}
             GithubActionsIgnoreFail: true
 
           - matid: 03
+            Architecture: x64
             os: windows-2025
             compilerEnv: UCRT64
             shellEnv: msys2 {0}
@@ -85,6 +88,13 @@ jobs:
           Set-EnvVar "shellEnv=${env:shellEnv}"
 
           echo "shellEnv: ${env:shellEnv}"
+
+          # x64 or x86
+          ${env:Architecture} = "${{ matrix.Architecture }}"
+          if("${env:Architecture}" -eq ""){${env:Architecture} = "notset"}
+          Set-EnvVar "Architecture=${env:Architecture}"
+
+          echo "Architecture: ${env:Architecture}"
 
           ${env:os} = "${{ matrix.os }}"
           if("${env:os}" -eq ""){${env:os} = "notset"}
@@ -175,7 +185,7 @@ jobs:
         with:
           # x86 or x86_64
           #         GitHub offers ternary operator like behaviour that you can use in expressions
-          platform: ${{ env.Platform == 'x64' && 'x86_64' || 'x86' }}
+          platform: ${{ env.Architecture == 'x64' && 'x86_64' || 'x86' }}
           install-dir: 'C:\cygwin'
           # REQUIRED default true - otherwise the default install MING64 "bash" will be found
           # add-to-path: true
@@ -217,6 +227,7 @@ jobs:
           #
           if [ "${OperatingSystem}" == "Msys" ]; then echo "msystem: ${msystem}" ; fi
           if [ "${OperatingSystem}" == "Msys" ]; then echo "MSYS2_LOCATION: ${MSYS2_LOCATION}" ; fi
+          if [ "${OperatingSystem}" == "Msys" ]; then echo "env.MSYS2_LOCATION: ${{ env.MSYS2_LOCATION }}}" ; fi
           if [ "${OperatingSystem}" == "Msys" ]; then export | grep MINGW ; fi
           if [ "${OperatingSystem}" == "Msys" ]; then export | grep MSYSTEM ; fi
 
