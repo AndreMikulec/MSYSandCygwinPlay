@@ -121,8 +121,14 @@ jobs:
 
           echo "MINGW_PACKAGE_PREFIX: ${env:MINGW_PACKAGE_PREFIX}"
 
-      - name: Install Windows mingw Software on ${{ matrix.compilerEnv }}
-        if: ${{ env.os == 'windows-2025' && env.compilerClass == 'MSYS2' }}
+      # BEST DESIGN
+      # If available, use the shell variable ${MYVAR}
+      # If the shell variable is not avalable then, use the Github environment variable ${[ env.MYVAR }}
+      # If the Github environmental variable is not avalable then use the Github matrix variable ${[ matrix.MYVAR }}
+
+      # Note, MSYS2 is Windows only.  But, the Arch package management system is Linux (and Windows through MSYS2) 
+      - name: Install MSYS2 on ${{ matrix.compilerEnv }}
+        if: ${{ env.compilerClass == 'MSYS2' }}
         uses: msys2/setup-msys2@v2
         with:
           update: true
@@ -131,17 +137,20 @@ jobs:
           install: >-
             ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
 
-      - name: Set Variables on ${{ matrix.compilerEnv }}
-        if: ${{ env.os == 'windows-2025' && env.compilerClass == 'MSYS2' }}
+      - name: Set Variables in ${{ matrix.compilerEnv }}
+        if: ${{ env.compilerClass == 'MSYS2' }}
         env:
           # Msys OS variable
           msystem: ${{ env.compilerEnv }}
         run: |
           set -x -v -e
-          echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
+          export VAR="notset"
+          if [ "true" == "true" ]; then export VAR="value ; fi 
+          echo "VAR=${VAR}" >> ${GITHUB_ENV}
+          echo "VAR: ${VAR}"
 
-      - name: Install Windows mingw Software Packages on ${{ matrix.compilerEnv }}
-        if: ${{ env.os == 'windows-2025' && env.compilerClass == 'MSYS2' }}
+      - name: Install MSYS2 Packages on ${{ matrix.compilerEnv }}
+        if: ${{ env.compilerClass == 'MSYS2' }}
         env:
           # Msys OS variable
           msystem: ${{ env.compilerEnv }}
@@ -149,3 +158,30 @@ jobs:
           set -x -v -e
           echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
           pacman --noconfirm -S --needed  ${MINGW_PACKAGE_PREFIX}-7zip
+
+      - name: Set up cygwin
+        if: ${{ env.compilerClass == 'cygwin' }}
+        uses: cygwin/cygwin-install-action@v6
+        with:
+          # x86 or x86_64
+          #         GitHub offers ternary operator like behaviour that you can use in expressions
+          platform: ${{ env.Platform == 'x64' && 'x86_64' || 'x86' }}
+          install-dir: 'C:\cygwin'
+          # REQUIRED default true - otherwise the default install MING64 "bash" will be found
+          # add-to-path: true
+          work-vol: 'C:'
+          packages: >-
+             p7zip
+
+      - name: View cygwin p7zip Version
+        if: ${{ env.compilerClass == 'cygwin' }}
+        env:
+          # Msys OS variable
+          msystem: ${{ env.compilerEnv }}
+        run: |
+          echo "View cygwin p7zip Version"
+          # cygwin query R package version
+          cygcheck -c p7zip
+
+
+
