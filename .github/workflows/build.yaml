@@ -171,15 +171,38 @@ jobs:
           # cygwin query R package version
           cygcheck -c p7zip
 
-      - name: Set Variables in ${{ matrix.compilerEnv }} in ${{ matrix.shell }}
+      - name: Set Variables in ${{ matrix.compilerEnv }} in ${{ matrix.shellEnv }}
         env:
+          # cygwin OS variables
+          SHELLOPTS: igncr
+          CHERE_INVOKING: 1
           # Msys OS variable
           msystem: ${{ env.compilerEnv }}
         run: |
+          echo "Welcome to Set Variables in ${compilerEnv} in ${shellEnv}"
           set -x -v -e
+          if [ "${OperatingSystem}" == "" ]; then export OperatingSystem=$(uname -o); fi
+          echo "OperatingSystem: ${OperatingSystem}"
+          if [ "${OperatingSystem}" == "Cygwin" ]
+          then
+            # because I set CHERE_INVOKING to be 1
+            export PATH=/usr/local/bin:/usr/bin:/usr/lib/lapack:/bin:/usr/sbin:/sbin
+          fi
+          uname -a
+          echo "compilerEnv: ${{ env.compilerEnv }}"
+          echo "bash: $(which bash)"
+          echo "Present Working Directory: $(pwd)"
+          #
+          if [ "${OperatingSystem}" == "Msys" ]
+          then
+            echo "msystem: ${msystem}"
+            export | grep MINGW
+            export | grep MSYSTEM
+          fi
           export VAR="notset"
           if [ "true" == "true" ]; then export VAR="value" ; fi 
           echo "VAR=${VAR}" >> ${GITHUB_ENV}
           echo "VAR: ${VAR}"
+
 
 
