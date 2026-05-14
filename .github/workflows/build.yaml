@@ -226,8 +226,9 @@ jobs:
           echo "Present Working Directory: $(pwd)"
           #
           if [ "${OperatingSystem}" == "Msys" ]; then echo "msystem: ${msystem}" ; fi
+          if [ "${OperatingSystem}" == "Msys" ]; then echo "env.msystem: ${{ env.msystem }}" ; fi
           if [ "${OperatingSystem}" == "Msys" ]; then echo "MSYS2_LOCATION: ${MSYS2_LOCATION}" ; fi
-          if [ "${OperatingSystem}" == "Msys" ]; then echo "env.MSYS2_LOCATION: ${{ env.MSYS2_LOCATION }}}" ; fi
+          if [ "${OperatingSystem}" == "Msys" ]; then echo "env.MSYS2_LOCATION: ${{ env.MSYS2_LOCATION }}" ; fi
           if [ "${OperatingSystem}" == "Msys" ]; then export | grep MINGW ; fi
           if [ "${OperatingSystem}" == "Msys" ]; then export | grep MSYSTEM ; fi
 
