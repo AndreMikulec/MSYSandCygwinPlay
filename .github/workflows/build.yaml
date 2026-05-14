@@ -170,9 +170,9 @@ jobs:
             ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
 
       # for MSYS
-      - env:
-          MSYS2_LOCATION: ${{ steps.msys2_install.outputs.msys2-location }}
-        run: echo "$env:MSYS2_LOCATION"
+      # - env:
+      #    MSYS2_LOCATION: ${{ steps.msys2_install.outputs.msys2-location }}
+      #  run: echo "$env:MSYS2_LOCATION"
 
       - name: Install MSYS2 Packages on ${{ matrix.compilerEnv }}
         if: ${{ env.compilerClass == 'MSYS2' }}
@@ -215,6 +215,7 @@ jobs:
           CHERE_INVOKING: 1
           # Msys OS variable
           msystem: ${{ env.compilerEnv }}
+          MSYS2_LOCATION: ${{ steps.msys2_install.outputs.msys2-location }}
         run: |
           echo "Welcome to Set Variables in ${compilerEnv} in ${shellEnv} in ${shell}"
           set -x -v -e
