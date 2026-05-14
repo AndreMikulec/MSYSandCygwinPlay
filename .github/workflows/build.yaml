@@ -16,25 +16,25 @@ jobs:
       matrix:
         include:
 
-          - matid: 01
-            Architecture: x64
-            os: windows-2025
-            compilerEnv: cygwin
-            GithubActionsIgnoreFail: false
+        - matid: 01
+          Architecture: x64
+          os: windows-2025
+          compilerEnv: cygwin
+          GithubActionsIgnoreFail: false
 
-          - matid: 02
-            Architecture: x64
-            os: windows-2025
-            compilerEnv: MINGW32
-            shellEnv: msys2 {0}
-            GithubActionsIgnoreFail: true
+        - matid: 02
+          Architecture: x64
+          os: windows-2025
+          compilerEnv: MINGW32
+          shellEnv: msys2 {0}
+          GithubActionsIgnoreFail: true
 
-          - matid: 03
-            Architecture: x64
-            os: windows-2025
-            compilerEnv: UCRT64
-            shellEnv: msys2 {0}
-            GithubActionsIgnoreFail: true
+        - matid: 03
+          Architecture: x64
+          os: windows-2025
+          compilerEnv: UCRT64
+          shellEnv: msys2 {0}
+          GithubActionsIgnoreFail: true
 
     defaults:
       run:
