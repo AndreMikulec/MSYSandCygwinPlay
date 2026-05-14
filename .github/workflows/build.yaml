@@ -81,4 +81,4 @@ jobs:
         run: |
           set -x -v -e
           echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
-          pacman --noconfirm -S --needed  ${{ env.MINGW_PACKAGE_PREFIX }}-7zip
+          # pacman --noconfirm -S --needed  ${{ env.MINGW_PACKAGE_PREFIX }}-7zip
