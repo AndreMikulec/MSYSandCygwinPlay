@@ -23,13 +23,7 @@ jobs:
 
           - matid: 02
             os: windows-2025
-            compilerEnv: UCRT64
-            shellEnv: msys2 {0}
-            GithubActionsIgnoreFail: true
-
-          - matid: 03
-            os: windows-2025
-            compilerEnv: UCRT64
+            compilerEnv: MINGW32
             shellEnv: msys2 {0}
             GithubActionsIgnoreFail: true
 
@@ -46,19 +40,19 @@ jobs:
     steps:
 
       - name: I am Powershell
-        if: ${{ env.os == 'windows-2025'}}
+        if: ${{ matrix.os == 'windows-2025'}}
         shell: powershell
         run: |
           echo "I am Powershell"
 
-      - name: I am Cmd
-        if: ${{ env.os == 'windows-2025' }}
+      - name: I am Cmd on 
+        if: ${{ matrix.os == 'windows-2025' }}
         shell: cmd
         run: |
           echo "I am Cmd."
 
-      - name: Set Variables
-        if: ${{ env.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
+      - name: Set Variables on ${{ matrix.compilerEnv }}
+        if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
         env:
           # Msys OS variable
           msystem: ${{ env.compilerEnv }}
@@ -69,9 +63,8 @@ jobs:
           echo "MINGW_PACKAGE_PREFIX=${MINGW_PACKAGE_PREFIX}" >> ${GITHUB_ENV}
           echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
 
-
-      - name: Install Windows mingw Software
-        if: ${{ env.os == 'windows-2025' && env.compilerClass == 'MSYS2' && env.compilerEnv != 'MINGW32' }}
+      - name: Install Windows mingw Software on ${{ matrix.compilerEnv }}
+        if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
         uses: msys2/setup-msys2@v2
         with:
           update: true
@@ -81,8 +74,8 @@ jobs:
           install: >-
             ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
 
-      - name: Install Windows mingw Software packages
-        if: ${{ env.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
+      - name: Install Windows mingw Software packages on ${{ matrix.compilerEnv }}
+        if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
         env:
           # Msys OS variable
           msystem: ${{ env.compilerEnv }}
