@@ -66,8 +66,8 @@ jobs:
           msystem: ${{ matrix.compilerEnv }}
         run: |
           set -x -v -e
-          if [ "${{ matrix.compilerEnv }}" == "MINGW32" ]; then export MINGW_PACKAGE_PREFIX = "mingw-w64-i686"        ; fi
-          if [ "${{ matrix.compilerEnv }}" == "UCRT64"  ]; then export MINGW_PACKAGE_PREFIX = "mingw-w64-ucrt-x86_64" ; fi
+          if [ "${{ matrix.compilerEnv }}" == "MINGW32" ]; then MINGW_PACKAGE_PREFIX = "mingw-w64-i686"        ; fi
+          if [ "${{ matrix.compilerEnv }}" == "UCRT64"  ]; then MINGW_PACKAGE_PREFIX = "mingw-w64-ucrt-x86_64" ; fi
           echo "MINGW_PACKAGE_PREFIX=${MINGW_PACKAGE_PREFIX}" >> ${GITHUB_ENV}
           echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
 
