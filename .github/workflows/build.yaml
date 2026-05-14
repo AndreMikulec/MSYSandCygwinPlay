@@ -53,6 +53,7 @@ jobs:
 
       - name: Set Variables on ${{ matrix.compilerEnv }}
         if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
+        uses: msys2/setup-msys2@v2
         env:
           # Msys OS variable
           msystem: ${{ matrix.compilerEnv }}
@@ -76,6 +77,7 @@ jobs:
 
       - name: Install Windows mingw Software packages on ${{ matrix.compilerEnv }}
         if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
+        uses: msys2/setup-msys2@v2
         env:
           # Msys OS variable
           msystem: ${{ matrix.compilerEnv }}
