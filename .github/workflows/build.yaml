@@ -66,6 +66,18 @@ jobs:
 
           echo "HEAD7_GITHUB_SHA: ${env:HEAD7_GITHUB_SHA}"
 
+          ${env:shell} = "${{ matrix.shell }}"
+          if("${env:shell}" -eq ""){${env:shell} = "notset"}
+          Set-EnvVar "shell=${env:shell}"
+
+          echo "shell: ${env:shell}"
+
+          ${env:shellEnv} = "${{ matrix.shellEnv }}"
+          if("${env:shellEnv}" -eq ""){${env:shellEnv} = "notset"}
+          Set-EnvVar "shellEnv=${env:shellEnv}"
+
+          echo "shellEnv: ${env:shellEnv}"
+
           ${env:os} = "${{ matrix.os }}"
           if("${env:os}" -eq ""){${env:os} = "notset"}
           Set-EnvVar "os=${env:os}"
@@ -171,7 +183,7 @@ jobs:
           # cygwin query R package version
           cygcheck -c p7zip
 
-      - name: Set Variables in ${{ matrix.compilerEnv }} in ${{ matrix.shellEnv }}
+      - name: Set Variables in ${{ matrix.compilerEnv }} in ${{ matrix.shellEnv }} in in ${{ matrix.shell }}
         env:
           # cygwin OS variables
           SHELLOPTS: igncr
@@ -179,7 +191,7 @@ jobs:
           # Msys OS variable
           msystem: ${{ env.compilerEnv }}
         run: |
-          echo "Welcome to Set Variables in ${compilerEnv} in ${shellEnv}"
+          echo "Welcome to Set Variables in ${compilerEnv} in ${shellEnv} in ${shell}"
           set -x -v -e
           if [ "${OperatingSystem}" == "" ]; then export OperatingSystem=$(uname -o); fi
           echo "OperatingSystem: ${OperatingSystem}"
