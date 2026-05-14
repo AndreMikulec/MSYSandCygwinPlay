@@ -90,6 +90,12 @@ jobs:
 
         echo "shellEnv: ${env:shellEnv}"
 
+        ${env:matid} = "${{ matrix.matid }}"
+        if("${env:matid}" -eq ""){${env:matid} = "notset"}
+        Set-EnvVar "matid=${env:matid}"
+
+        echo "matid: ${env:matid}"
+
         # x64 or x86
         ${env:Architecture} = "${{ matrix.Architecture }}"
         if("${env:Architecture}" -eq ""){${env:Architecture} = "notset"}
