@@ -39,46 +39,105 @@ jobs:
 
     steps:
 
-      - name: I am Powershell on ${{ matrix.os }}
-        if: ${{ matrix.os == 'windows-2025'}}
-        shell: powershell
-        run: |
-          echo "I am Powershell"
-
-      - name: I am Cmd on ${{ matrix.os }}
+      - name: Windows Machine Stats systeminfo
         if: ${{ matrix.os == 'windows-2025' }}
         shell: cmd
         run: |
-          echo "I am Cmd."
+          systeminfo
+
+      - name: Matrix Variables
+        if: matrix.os == 'windows-2025'
+        shell: powershell
+        run: |
+          # systeminfo
+          echo "${{ matrix.compilerEnv }} on ${{ matrix.os }}"
+  
+          function Set-EnvVar {param($X)     Add-Content -Path ${env:GITHUB_ENV} -Value "$X"}
+          #
+          ${env:HEAD7_GITHUB_SHA} = "${env:GITHUB_SHA}".SubString(0,7)
+          Set-EnvVar "HEAD7_GITHUB_SHA=${env:HEAD7_GITHUB_SHA}"
+
+          echo "HEAD7_GITHUB_SHA: ${env:HEAD7_GITHUB_SHA}"
+
+          ${env:os} = "${{ matrix.os }}"
+          if("${env:os}" -eq ""){${env:os} = "notset"}
+          Set-EnvVar "os=${env:os}"
+
+          echo "os: ${env:os}"
+
+          ${env:compilerEnv} = "${{ matrix.compilerEnv }}"
+          if("${env:compilerEnv}" -eq ""){${env:compilerEnv} = "notset"}
+          Set-EnvVar "compilerEnv=${env:compilerEnv}"
+
+          echo "compilerEnv: ${env:compilerEnv}"
+
+          ${env:compilerClass} = "notset"
+          if("${env:compilerEnv}" -in "MING64", "MINGW32", "UCRT64", "CLANG32", "CLANG64", "CLANGARM64") {
+            ${env:compilerClass} = "MSYS2"
+          }
+          if("${env:compilerEnv}" -eq "cygwin") {
+            ${env:compilerClass} = "cygwin"
+          }
+          Set-EnvVar "compilerClass=${env:compilerClass}"
+
+          echo "compilerClass: ${env:compilerClass}"
+
+          ${env:compilerExe} = "notset"
+          if ( "${{ matrix.compilerEnv }}" -eq "MINGW64"    ) { ${env:compilerExe} = "gcc" }
+          if ( "${{ matrix.compilerEnv }}" -eq "MINGW32"    ) { ${env:compilerExe} = "gcc" }
+          if ( "${{ matrix.compilerEnv }}" -eq "UCRT64"     ) { ${env:compilerExe} = "gcc" }
+          if ( "${{ matrix.compilerEnv }}" -eq "CLANG32"    ) { ${env:compilerExe} = "clang" }
+          if ( "${{ matrix.compilerEnv }}" -eq "CLANG64"    ) { ${env:compilerExe} = "clang" }
+          if ( "${{ matrix.compilerEnv }}" -eq "CLANGARM64" ) { ${env:compilerExe} = "clang" }
+          if("${env:compilerExe}" -eq ""){${env:compilerExe} = "notset"}
+          Set-EnvVar "compilerExe=${env:compilerExe}"
+
+          echo "compilerExe: ${env:compilerExe}"
+
+          ${env:mingw_env} = "notset"
+          if ( "${{ matrix.compilerEnv }}" -eq "MINGW64"    ) { ${env:mingw_env} = "x86_64" }
+          if ( "${{ matrix.compilerEnv }}" -eq "MINGW32"    ) { ${env:mingw_env} = "i686" }
+          if ( "${{ matrix.compilerEnv }}" -eq "UCRT64"     ) { ${env:mingw_env} = "ucrt-x86_64" }
+          if ( "${{ matrix.compilerEnv }}" -eq "CLANG32"    ) { ${env:mingw_env} = "clang-i686" }
+          if ( "${{ matrix.compilerEnv }}" -eq "CLANG64"    ) { ${env:mingw_env} = "clang-x86_64" }
+          if ( "${{ matrix.compilerEnv }}" -eq "CLANGARM64" ) { ${env:mingw_env} = "clang-aarch64" }
+          if ( "${{ matrix.compilerEnv }}" -eq "notset"     ) { ${env:mingw_env} = "notset" }
+          Set-EnvVar "mingw_env=${env:mingw_env}"
+
+          echo "mingw_env: ${env:mingw_env}"
+
+          ${env:MINGW_PACKAGE_PREFIX} = "notset"
+          if ("${{ env.mingw_env }}" -ne "notset") { ${env:MINGW_PACKAGE_PREFIX} = "mingw-w64-${env:mingw_env}" }
+          if ("${{ env.mingw_env }}" -eq "notset") { ${env:MINGW_PACKAGE_PREFIX} = "notset" }
+          Set-EnvVar "MINGW_PACKAGE_PREFIX=${env:MINGW_PACKAGE_PREFIX}"
+
+          echo "MINGW_PACKAGE_PREFIX: ${env:MINGW_PACKAGE_PREFIX}"
 
       - name: Install Windows mingw Software on ${{ matrix.compilerEnv }}
-        if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
+        if: ${{ env.os == 'windows-2025' && ( env.compilerEnv == 'UCRT64' || env.compilerEnv == 'MINGW32' ) }}
         uses: msys2/setup-msys2@v2
         with:
           update: true
           path-type: strict
-          msystem: ${{ matrix.compilerEnv }}
+          msystem: ${{ env.compilerEnv }}
           install: >-
             ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
 
       - name: Set Variables on ${{ matrix.compilerEnv }}
-        if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
+        if: ${{ env.os == 'windows-2025' && ( env.compilerEnv == 'UCRT64' || env.compilerEnv == 'MINGW32' ) }}
         env:
           # Msys OS variable
-          msystem: ${{ matrix.compilerEnv }}
+          msystem: ${{ env.compilerEnv }}
         run: |
           set -x -v -e
-          if [ "${{ matrix.compilerEnv }}" == "MINGW32" ]; then export MINGW_PACKAGE_PREFIX="mingw-w64-i686"        ; fi
-          if [ "${{ matrix.compilerEnv }}" == "UCRT64"  ]; then export MINGW_PACKAGE_PREFIX="mingw-w64-ucrt-x86_64" ; fi
-          echo "MINGW_PACKAGE_PREFIX=${MINGW_PACKAGE_PREFIX}" >> ${GITHUB_ENV}
           echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
 
       - name: Install Windows mingw Software Packages on ${{ matrix.compilerEnv }}
-        if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
+        if: ${{ env.os == 'windows-2025' && ( env.compilerEnv == 'UCRT64' || env.compilerEnv == 'MINGW32' ) }}
         env:
           # Msys OS variable
-          msystem: ${{ matrix.compilerEnv }}
+          msystem: ${{ env.compilerEnv }}
         run: |
           set -x -v -e
           echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
-          # pacman --noconfirm -S --needed  ${{ env.MINGW_PACKAGE_PREFIX }}-7zip
+          pacman --noconfirm -S --needed  ${MINGW_PACKAGE_PREFIX}-7zip
