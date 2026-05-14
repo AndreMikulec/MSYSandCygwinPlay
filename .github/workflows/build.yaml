@@ -215,10 +215,10 @@ jobs:
           echo "bash: $(which bash)"
           echo "Present Working Directory: $(pwd)"
           #
-          if [ "${OperatingSystem}" == "Msys" ]; then echo "msystem: ${msystem}"
+          if [ "${OperatingSystem}" == "Msys" ]; then echo "msystem: ${msystem}" ; fi
           if [ "${OperatingSystem}" == "Msys" ]; then echo "MSYS2_LOCATION: ${MSYS2_LOCATION}" ; fi
-          if [ "${OperatingSystem}" == "Msys" ]; then export | grep MINGW ;
-          if [ "${OperatingSystem}" == "Msys" ]; then export | grep MSYSTEM ;
+          if [ "${OperatingSystem}" == "Msys" ]; then export | grep MINGW ; fi
+          if [ "${OperatingSystem}" == "Msys" ]; then export | grep MSYSTEM ; fi
 
           export VAR="notset"
           if [ "true" == "true" ]; then export VAR="value" ; fi 
