@@ -75,15 +75,5 @@ jobs:
           install: >-
             ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
 
-      - name: Install Windows mingw Software packages on ${{ matrix.compilerEnv }}
-        if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
-        uses: msys2/setup-msys2@v2
-        env:
-          # Msys OS variable
-          msystem: ${{ matrix.compilerEnv }}
-        run: |
-          set -x -v -e
-          echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
-          pacman -S --needed --noconfirm ${{ env.MINGW_PACKAGE_PREFIX }}-7zip
-
+  
 
