@@ -172,14 +172,14 @@ jobs:
           cygcheck -c p7zip
 
       - name: Set Variables in ${{ matrix.compilerEnv }} in ${{ matrix.shell }}
-          env:
-            # Msys OS variable
-            msystem: ${{ env.compilerEnv }}
-          run: |
-            set -x -v -e
-            export VAR="notset"
-            if [ "true" == "true" ]; then export VAR="value" ; fi 
-            echo "VAR=${VAR}" >> ${GITHUB_ENV}
-            echo "VAR: ${VAR}"
+        env:
+          # Msys OS variable
+          msystem: ${{ env.compilerEnv }}
+        run: |
+          set -x -v -e
+          export VAR="notset"
+          if [ "true" == "true" ]; then export VAR="value" ; fi 
+          echo "VAR=${VAR}" >> ${GITHUB_ENV}
+          echo "VAR: ${VAR}"
 
 
