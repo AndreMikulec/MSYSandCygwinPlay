@@ -39,13 +39,13 @@ jobs:
 
     steps:
 
-      - name: I am Powershell
+      - name: I am Powershell on ${{ matrix.os }}
         if: ${{ matrix.os == 'windows-2025'}}
         shell: powershell
         run: |
           echo "I am Powershell"
 
-      - name: I am Cmd on 
+      - name: I am Cmd on ${{ matrix.os }}
         if: ${{ matrix.os == 'windows-2025' }}
         shell: cmd
         run: |
@@ -55,7 +55,7 @@ jobs:
         if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
         env:
           # Msys OS variable
-          msystem: ${{ env.compilerEnv }}
+          msystem: ${{ matrix.compilerEnv }}
         run: |
           set -x -v -e
           if [ "${{ matrix.compilerEnv }}" == "MINGW32" ]; then export MINGW_PACKAGE_PREFIX = "mingw-w64-i686"        ; fi
@@ -69,7 +69,7 @@ jobs:
         with:
           update: true
           path-type: strict
-          msystem: ${{ env.compilerEnv }}
+          msystem: ${{ matrix.compilerEnv }}
           #
           install: >-
             ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
@@ -78,7 +78,7 @@ jobs:
         if: ${{ matrix.os == 'windows-2025' && ( matrix.compilerEnv == 'UCRT64' || matrix.compilerEnv == 'MINGW32' ) }}
         env:
           # Msys OS variable
-          msystem: ${{ env.compilerEnv }}
+          msystem: ${{ matrix.compilerEnv }}
         run: |
           set -x -v -e
           echo "MINGW_PACKAGE_PREFIX: ${MINGW_PACKAGE_PREFIX}"
