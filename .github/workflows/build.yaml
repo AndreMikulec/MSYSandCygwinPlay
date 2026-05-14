@@ -137,18 +137,6 @@ jobs:
           install: >-
             ${{ env.MINGW_PACKAGE_PREFIX }}-diffutils
 
-      - name: Set Variables in ${{ matrix.compilerEnv }}
-        if: ${{ env.compilerClass == 'MSYS2' }}
-        env:
-          # Msys OS variable
-          msystem: ${{ env.compilerEnv }}
-        run: |
-          set -x -v -e
-          export VAR="notset"
-          if [ "true" == "true" ]; then export VAR="value ; fi 
-          echo "VAR=${VAR}" >> ${GITHUB_ENV}
-          echo "VAR: ${VAR}"
-
       - name: Install MSYS2 Packages on ${{ matrix.compilerEnv }}
         if: ${{ env.compilerClass == 'MSYS2' }}
         env:
@@ -183,5 +171,15 @@ jobs:
           # cygwin query R package version
           cygcheck -c p7zip
 
+    - name: Set Variables in ${{ matrix.compilerEnv }} in ${{ matrix.shell }}
+        env:
+          # Msys OS variable
+          msystem: ${{ env.compilerEnv }}
+        run: |
+          set -x -v -e
+          export VAR="notset"
+          if [ "true" == "true" ]; then export VAR="value" ; fi 
+          echo "VAR=${VAR}" >> ${GITHUB_ENV}
+          echo "VAR: ${VAR}"
 
 
