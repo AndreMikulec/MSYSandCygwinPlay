@@ -221,7 +221,7 @@ jobs:
         CHERE_INVOKING: 1
         # Msys OS variable
         msystem: ${{ env.compilerEnv }}
-        MSYS2_LOCATION: ${{ steps.msys2_install.outputs.msys2-location }}
+        MSYS2_LOCATION: ${{ steps.msys2_install.outputs.msys2-location }} # PASSED_IN - becomse readable by ${X} or ${{ env.X }}
       run: |
         echo "Welcome to Set Variables in ${compilerEnv} in ${shellEnv} in ${shell}"
         set -x -v -e
