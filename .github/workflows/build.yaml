@@ -246,6 +246,18 @@ jobs:
         export VAR="notset"
         if [ "true" == "true" ]; then export VAR="value" ; fi 
         echo "VAR=${VAR}" >> ${GITHUB_ENV}
-        echo "VAR: ${VAR}"
+        echo "VAR: ${VAR}" > test.txt
+
+      # Note, ncipollo/release-action requires a tag
+      - name: RELEASE ME
+        uses: ncipollo/release-action@v1
+        with:
+          # in certain situations, the action will create a tag
+          tag:  MYTAG
+          allowUpdates: true
+          replacesArtifacts: true
+          artifacts: |
+            test.txt
+
 
 
