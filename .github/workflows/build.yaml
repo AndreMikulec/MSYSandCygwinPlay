@@ -6,6 +6,9 @@ on:
    pull_request:
    workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build matid ${{ matrix.matid }} ${{ matrix.compilerEnv }}
@@ -248,16 +251,16 @@ jobs:
         echo "VAR=${VAR}" >> ${GITHUB_ENV}
         echo "VAR: ${VAR}" > test.txt
 
-      # Note, ncipollo/release-action requires a tag
-      - name: RELEASE ME
-        uses: ncipollo/release-action@v1
-        with:
-          # in certain situations, the action will create a tag
-          tag:  MYTAG
-          allowUpdates: true
-          replacesArtifacts: true
-          artifacts: |
-            test.txt
-
+    # Note, ncipollo/release-action requires a tag
+    - name: RELEASE ME
+      uses: ncipollo/release-action@v1
+      with:
+        # in certain situations, the action will create a tag
+        tag:  CREATEDTAG
+        allowUpdates: true
+        replacesArtifacts: true
+        artifacts: |
+          test.txt
+        token: ${{ secrets.GITHUB_TOKEN }}
 
 
